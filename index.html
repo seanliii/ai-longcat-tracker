@@ -1,719 +1,596 @@
-M_SPANID='0.147.1' <!DOCTYPE html>
-M_SPANID='0.147.2' <html lang="zh-CN">
-M_SPANID='0.147.3' <head>
-  M_SPANID='0.147.4' <meta charset="UTF-8">
-  M_SPANID='0.147.5' <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  M_SPANID='0.147.6' <title>LongCat-2.0 追踪器 — 美团万亿参数国产大模型</title>
-  M_SPANID='0.147.7' <style>
-    M_SPANID='0.147.8' * { margin:0; padding:0; box-sizing:border-box; }
-    M_SPANID='0.147.9' body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background:#0f172a; color:#e2e8f0; min-height:100vh; }
-    M_SPANID='0.147.10' .container { max-width:1200px; margin:0 auto; padding:24px; }
-    M_SPANID='0.147.11' header { text-align:center; margin-bottom:32px; }
-    M_SPANID='0.147.12' header h1 { font-size:2.2rem; font-weight:700; color:#f8fafc; margin-bottom:8px; }
-    M_SPANID='0.147.13' header .subtitle { color:#94a3b8; font-size:1.1rem; margin-bottom:16px; }
-    M_SPANID='0.147.14' .countdown { display:flex; justify-content:center; gap:16px; margin-bottom:24px; flex-wrap:wrap; }
-    M_SPANID='0.147.15' .countdown-item { background:#1e293b; border:1px solid #334155; border-radius:12px; padding:16px 24px; text-align:center; min-width:80px; }
-    M_SPANID='0.147.16' .countdown-item .value { font-size:2rem; font-weight:700; color:#38bdf8; }
-    M_SPANID='0.147.17' .countdown-item .label { font-size:0.85rem; color:#64748b; margin-top:4px; }
-    M_SPANID='0.147.18' .stats { display:grid; grid-template-columns:repeat(auto-fit, minmax(160px,1fr)); gap:12px; margin-bottom:32px; }
-    M_SPANID='0.147.19' .stat-card { background:#1e293b; border:1px solid #334155; border-radius:12px; padding:16px; text-align:center; }
-    M_SPANID='0.147.20' .stat-card .value { font-size:1.8rem; font-weight:700; color:#38bdf8; }
-    M_SPANID='0.147.21' .stat-card .label { font-size:0.85rem; color:#94a3b8; margin-top:4px; }
-    M_SPANID='0.147.22' .controls { display:flex; gap:12px; margin-bottom:24px; flex-wrap:wrap; align-items:center; }
-    M_SPANID='0.147.23' .search-input { flex:1; min-width:200px; padding:10px 16px; border-radius:8px; border:1px solid #334155; background:#1e293b; color:#e2e8f0; font-size:0.95rem; }
-    M_SPANID='0.147.24' .search-input::placeholder { color:#64748b; }
-    M_SPANID='0.147.25' .filter-group { display:flex; gap:8px; flex-wrap:wrap; }
-    M_SPANID='0.147.26' .filter-btn { padding:8px 16px; border-radius:8px; border:1px solid #334155; background:#1e293b; color:#94a3b8; cursor:pointer; font-size:0.85rem; transition:all 0.2s; }
-    M_SPANID='0.147.27' .filter-btn:hover { border-color:#38bdf8; color:#38bdf8; }
-    M_SPANID='0.147.28' .filter-btn.active { background:#38bdf8; color:#0f172a; border-color:#38bdf8; font-weight:600; }
-    M_SPANID='0.147.29' .view-toggle { display:flex; gap:8px; margin-left:auto; }
-    M_SPANID='0.147.30' .view-btn { padding:8px 16px; border-radius:8px; border:1px solid #334155; background:#1e293b; color:#94a3b8; cursor:pointer; font-size:0.85rem; }
-    M_SPANID='0.147.31' .view-btn.active { background:#38bdf8; color:#0f172a; border-color:#38bdf8; }
-    M_SPANID='0.147.32' .content-grid { display:grid; grid-template-columns:repeat(auto-fill, minmax(320px,1fr)); gap:16px; }
-    M_SPANID='0.147.33' .card { background:#1e293b; border:1px solid #334155; border-radius:12px; padding:20px; cursor:pointer; transition:transform 0.2s, border-color 0.2s; }
-    M_SPANID='0.147.34' .card:hover { transform:translateY(-2px); border-color:#38bdf8; }
-    M_SPANID='0.147.35' .card-header { display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:12px; }
-    M_SPANID='0.147.36' .card-title { font-size:1.1rem; font-weight:600; color:#f8fafc; }
-    M_SPANID='0.147.37' .card-badge { padding:4px 10px; border-radius:6px; font-size:0.75rem; font-weight:500; }
-    M_SPANID='0.147.38' .badge-category-模型发布 { background:#7c3aed; color:#fff; }
-    M_SPANID='0.147.39' .badge-category-技术突破 { background:#0ea5e9; color:#fff; }
-    M_SPANID='0.147.40' .badge-category-生态进展 { background:#10b981; color:#fff; }
-    M_SPANID='0.147.41' .badge-category-性能评测 { background:#f59e0b; color:#fff; }
-    M_SPANID='0.147.42' .badge-category-开源计划 { background:#ec4899; color:#fff; }
-    M_SPANID='0.147.43' .badge-category-组织变革 { background:#8b5cf6; color:#fff; }
-    M_SPANID='0.147.44' .badge-status-已完成 { background:#059669; color:#fff; }
-    M_SPANID='0.147.45' .badge-status-进行中 { background:#d97706; color:#fff; }
-    M_SPANID='0.147.46' .badge-status-计划中 { background:#64748b; color:#fff; }
-    M_SPANID='0.147.47' .card-meta { color:#64748b; font-size:0.85rem; margin-bottom:8px; display:flex; gap:12px; flex-wrap:wrap; }
-    M_SPANID='0.147.48' .card-desc { color:#94a3b8; font-size:0.9rem; line-height:1.5; margin-bottom:12px; }
-    M_SPANID='0.147.49' .card-tags { display:flex; gap:6px; flex-wrap:wrap; }
-    M_SPANID='0.147.50' .card-tag { padding:4px 10px; border-radius:6px; background:#0f172a; color:#64748b; font-size:0.75rem; border:1px solid #334155; }
-    M_SPANID='0.147.51' .timeline-view { display:none; }
-    M_SPANID='0.147.52' .timeline-item { display:flex; gap:16px; margin-bottom:20px; position:relative; padding-left:32px; }
-    M_SPANID='0.147.53' .timeline-item::before { content:''; position:absolute; left:8px; top:8px; width:12px; height:12px; border-radius:50%; background:#38bdf8; border:2px solid #0f172a; }
-    M_SPANID='0.147.54' .timeline-item::after { content:''; position:absolute; left:13px; top:24px; width:2px; height:calc(100% + 8px); background:#334155; }
-    M_SPANID='0.147.55' .timeline-item:last-child::after { display:none; }
-    M_SPANID='0.147.56' .timeline-date { min-width:100px; color:#64748b; font-size:0.85rem; flex-shrink:0; }
-    M_SPANID='0.147.57' .timeline-content { background:#1e293b; border:1px solid #334155; border-radius:12px; padding:16px; flex:1; cursor:pointer; }
-    M_SPANID='0.147.58' .timeline-content:hover { border-color:#38bdf8; }
-    M_SPANID='0.147.59' .table-view { display:none; overflow-x:auto; }
-    M_SPANID='0.147.60' table { width:100%; border-collapse:collapse; }
-    M_SPANID='0.147.61' th, td { padding:12px; text-align:left; border-bottom:1px solid #334155; }
-    M_SPANID='0.147.62' th { color:#94a3b8; font-weight:500; font-size:0.85rem; text-transform:uppercase; }
-    M_SPANID='0.147.63' td { color:#e2e8f0; font-size:0.9rem; }
-    M_SPANID='0.147.64' tr:hover td { background:#1e293b; }
-    M_SPANID='0.147.65' .modal-overlay { display:none; position:fixed; top:0; left:0; right:0; bottom:0; background:rgba(0,0,0,0.8); z-index:100; justify-content:center; align-items:center; padding:24px; }
-    M_SPANID='0.147.66' .modal-overlay.active { display:flex; }
-    M_SPANID='0.147.67' .modal { background:#1e293b; border:1px solid #334155; border-radius:16px; max-width:600px; width:100%; max-height:85vh; overflow-y:auto; position:relative; }
-    M_SPANID='0.147.68' .modal-header { padding:20px 24px; border-bottom:1px solid #334155; display:flex; justify-content:space-between; align-items:center; }
-    M_SPANID='0.147.69' .modal-title { font-size:1.3rem; font-weight:600; color:#f8fafc; }
-    M_SPANID='0.147.70' .modal-close { background:none; border:none; color:#94a3b8; font-size:1.5rem; cursor:pointer; }
-    M_SPANID='0.147.71' .modal-body { padding:24px; }
-    M_SPANID='0.147.72' .modal-section { margin-bottom:20px; }
-    M_SPANID='0.147.73' .modal-section-title { color:#38bdf8; font-weight:600; font-size:0.9rem; margin-bottom:8px; text-transform:uppercase; }
-    M_SPANID='0.147.74' .modal-section-content { color:#e2e8f0; line-height:1.6; }
-    M_SPANID='0.147.75' .modal-tag { display:inline-block; padding:4px 10px; border-radius:6px; background:#0f172a; color:#94a3b8; font-size:0.8rem; border:1px solid #334155; margin:2px; }
-    M_SPANID='0.147.76' .modal-link { display:inline-block; color:#38bdf8; text-decoration:none; margin:4px 0; }
-    M_SPANID='0.147.77' .modal-link:hover { text-decoration:underline; }
-    M_SPANID='0.147.78' .empty-state { text-align:center; padding:60px 20px; color:#64748b; }
-    M_SPANID='0.147.79' .footer { text-align:center; margin-top:48px; padding:24px; color:#475569; font-size:0.85rem; border-top:1px solid #1e293b; }
-    M_SPANID='0.147.80' .highlight-box { background:#0f172a; border:1px solid #334155; border-radius:8px; padding:12px; margin:8px 0; }
-    M_SPANID='0.147.81' .highlight-box strong { color:#38bdf8; }
-    M_SPANID='0.147.82' @media (max-width: 768px) {
-      .countdown-item { min-width:60px; padding:12px 16px; }
-      .countdown-item .value { font-size:1.5rem; }
-      .stats { grid-template-columns:repeat(2, 1fr); }
-      .content-grid { grid-template-columns:1fr; }
-    }
-  M_SPANID='0.147.83' </style>
-M_SPANID='0.147.84' </head>
-M_SPANID='0.147.85' <body>
-  M_SPANID='0.147.86' <div class="container">
-    M_SPANID='0.147.87' <header>
-      M_SPANID='0.147.88' <h1>LongCat-2.0 追踪器</h1>
-      M_SPANID='0.147.89' <p class="subtitle">美团万亿参数国产大模型 · 1.6T 参数 · 5万卡国产算力 · 全链路自主可控</p>
-      M_SPANID='0.147.90' <div class="countdown" id="countdown"></div>
-    M_SPANID='0.147.91' </header>
-
-    M_SPANID='0.147.92' <div class="stats" id="stats"></div>
-
-    M_SPANID='0.147.93' <div class="controls">
-      M_SPANID='0.147.94' <input type="text" class="search-input" id="searchInput" placeholder="搜索技术、事件、数据...">
-      M_SPANID='0.147.95' <div class="filter-group" id="filterGroup"></div>
-      M_SPANID='0.147.96' <div class="view-toggle">
-        M_SPANID='0.147.97' <button class="view-btn active" data-view="grid">卡片</button>
-        M_SPANID='0.147.98' <button class="view-btn" data-view="timeline">时间线</button>
-        M_SPANID='0.147.99' <button class="view-btn" data-view="table">表格</button>
-      M_SPANID='0.147.100' </div>
-    M_SPANID='0.147.101' </div>
-
-    M_SPANID='0.147.102' <div class="content-grid" id="gridView"></div>
-    M_SPANID='0.147.103' <div class="timeline-view" id="timelineView"></div>
-    M_SPANID='0.147.104' <div class="table-view" id="tableView"></div>
-  M_SPANID='0.147.105' </div>
-
-  M_SPANID='0.147.106' <div class="modal-overlay" id="modalOverlay">
-    M_SPANID='0.147.107' <div class="modal">
-      M_SPANID='0.147.108' <div class="modal-header">
-        M_SPANID='0.147.109' <span class="modal-title" id="modalTitle"></span>
-        M_SPANID='0.147.110' <button class="modal-close" onclick="closeModal()">&times;M_SPANID='0.147.111' </button>
-      M_SPANID='0.147.112' </div>
-      M_SPANID='0.147.113' <div class="modal-body" id="modalBody"></div>
-    M_SPANID='0.147.114' </div>
-  M_SPANID='0.147.115' </div>
-
-  M_SPANID='0.147.116' <div class="footer">
-    M_SPANID='0.147.117' <p>LongCat-2.0 追踪器 · 数据截至 2026-07-03 · 非官方页面</p>
-  M_SPANID='0.147.118' </div>
-
-M_SPANID='0.147.119' <script>
-(function() {
-  const trackerData = [
-    {
-      id: 1, name: 'LongCat-2.0 正式发布', category: '模型发布', date: '2026-06-30', status: '已完成',
-      description: '美团正式发布新一代基础大模型 LongCat-2.0，采用 MoE 混合专家架构，总参数规模达 1.6 万亿，每个 Token 激活参数约 480 亿（动态范围 33B~56B），原生支持 1M 超长上下文。',
-      highlights: ['MoE架构','1.6T参数','1M上下文','全国产算力'],
-      keyInfo: ['发布日期：2026年6月30日','架构：MoE 混合专家架构','总参数：1.6 万亿','激活参数：480 亿（动态范围 33B~56B）','上下文窗口：1M（100万 Token）','预训练数据：超过 30T tokens'],
-      sources: [
-        { title: '美团发布LongCat-2.0大模型', url: 'https://baijiahao.baidu.com/s?id=1869406385772561189' },
-        { title: '快科技：全国产算力跑通', url: 'https://finance.sina.cn/tech/2026-07-03/detail-inifnxph0451482.d.html' },
-        { title: '每日经济新闻：三年蛰伏', url: 'https://m.nbd.com.cn/articles/2026-06-30/4442664.html' }
-      ]
-    },
-    {
-      id: 2, name: '5万卡国产算力全流程训练', category: '技术突破', date: '2026-06-30', status: '已完成',
-      description: '业界首个依靠国产算力完成训练、推理全流程的万亿参数大模型。峰值规模超过 5 万张国产算力卡，是迄今为止国产算力上完成的规模最大的训练任务。',
-      highlights: ['5万卡集群','全流程国产','MFU提升1.5倍','故障率降低70%'],
-      keyInfo: ['峰值规模：超过 5 万张国产算力卡','训练 MFU 提升：1.5 倍','稳态日吞吐：超过 1T tokens/day','月均日故障率降低：70% 以上','技术突破：万卡级容错恢复、NPU确定性计算','研发周期：2023 年起与国产算力厂商联合攻关'],
-      sources: [
-        { title: 'IT之家：业界首个', url: 'https://baijiahao.baidu.com/s?id=1869388841739284513' },
-        { title: '新浪：美团AI研发团队', url: 'http://k.sina.com.cn/article_7880068204_1d5b04c6c06801agze.html' }
-      ]
-    },
-    {
-      id: 3, name: 'Owl Alpha 匿名接入 OpenRouter', category: '生态进展', date: '2026-04', status: '已完成',
-      description: 'LongCat-2.0 预览版本以匿名身份 "Owl Alpha" 接入全球最大的大模型 API 路由平台 OpenRouter，截至 6 月底总调用量已跻身全球前三。',
-      highlights: ['OpenRouter','匿名登榜','全球前三','开发者自发传播'],
-      keyInfo: ['匿名身份：Owl Alpha','接入平台：OpenRouter（全球最大 API 路由平台）','总调用量排名：全球前三','发布策略：匿名登榜 → 圈内猜谜 → 官宣认领','时间线：2026 年 4 月底发布预览版并接入'],
-      sources: [
-        { title: '百家号：OpenRouter总调用量跻身全球前三', url: 'https://baijiahao.baidu.com/s?id=1869406385772561189' }
-      ]
-    },
-    {
-      id: 4, name: 'Agent 场景调用量全球领先', category: '生态进展', date: '2026-06', status: '已完成',
-      description: '在 Hermes、Claude Code、OpenClaw 等核心 Agent 场景中，LongCat-2.0 月调用量分别位列全球第一、第二和第三位。',
-      highlights: ['Hermes第一','Claude Code第二','OpenClaw第三','Agent能力接近Opus4.6'],
-      keyInfo: ['Hermes 月调用量：全球第一','Claude Code 月调用量：全球第二','OpenClaw 月调用量：全球第三','Agent 核心能力：接近 Claude Opus 4.6','代码能力：略优于智谱 GLM-5.1','评价：最受全球开发者欢迎的免费模型之一'],
-      sources: [
-        { title: '快科技：调用量冲进前三', url: 'https://finance.sina.cn/tech/2026-07-03/detail-inifnxph0451482.d.html' }
-      ]
-    },
-    {
-      id: 5, name: '零计算专家机制', category: '技术突破', date: '2026-06-30', status: '已完成',
-      description: '业界首创的 Token 级动态计算预算机制。识别助词、标点等简单 Token 并跳过无效运算，仅针对复杂内容调动算力资源，实现 33B~56B 动态激活范围。',
-      highlights: ['业界首创','Token级动态','简单Token跳过','算力精准分配'],
-      keyInfo: ['机制类型：零计算专家（Zero-Compute Expert）','创新点：Token 级动态计算预算，业界首创','动态范围：33B~56B 激活参数','优化效果：简单 Token 不消耗算力，复杂 Token 自动获得更多资源','架构融合：融入专家并行通信流程，避免不必要的传输与计算','对比优势：相比传统稠密大模型大幅提升算力利用率'],
-      sources: [
-        { title: 'IT之家：零计算专家机制', url: 'https://baijiahao.baidu.com/s?id=1869388841739284513' }
-      ]
-    },
-    {
-      id: 6, name: 'LongCat Sparse Attention (LSA)', category: '技术突破', date: '2026-06-30', status: '已完成',
-      description: '稀疏注意力机制，处理长文本时不再逐字逐句地看，而是智能筛选关键信息，将计算量从平方级降至线性级，在 100 万 Token 超长上下文中保持信息定位与理解能力。',
-      highlights: ['稀疏注意力','平方级→线性级','1M上下文','智能筛选'],
-      keyInfo: ['技术名称：LongCat Sparse Attention (LSA)','核心机制：智能筛选关键信息，跳过冗余计算','计算复杂度：从平方级 O(n²) 降至线性级 O(n)','上下文支持：100 万 Token 超长上下文','应用场景：长文档理解、代码库分析、多轮对话','优势：解决长文本处理中常见的信息遗忘问题'],
-      sources: [
-        { title: 'IT之家：LSA稀疏注意力机制', url: 'https://baijiahao.baidu.com/s?id=1869388841739284513' }
-      ]
-    },
-    {
-      id: 7, name: 'MOPD 三组专家架构', category: '技术突破', date: '2026-06-30', status: '已完成',
-      description: '通过 MOPD 架构融合 Agent、Reasoning、Interaction 三组专家能力——Agent Experts 专攻工具调用与自主纠错，Reasoning Experts 深耕数学与 STEM 推理，Interaction Experts 优化指令遵循与交互体验。',
-      highlights: ['MOPD架构','三组专家','分工协作','场景覆盖'],
-      keyInfo: ['架构名称：MOPD（Multi-Objective Parallel Decoding）','Agent Experts：专攻工具调用与自主纠错','Reasoning Experts：深耕数学与 STEM 推理','Interaction Experts：优化指令遵循与交互体验','设计理念：不同任务类型由不同专家组处理','效果：代码任务和 Agent 工具调用表现突出'],
-      sources: [
-        { title: 'IT之家：MOPD架构融合', url: 'https://baijiahao.baidu.com/s?id=1869388841739284513' }
-      ]
-    },
-    {
-      id: 8, name: 'SWE-bench Pro 性能评测', category: '性能评测', date: '2026-06-30', status: '已完成',
-      description: 'LongCat-2.0 在 SWE-bench Pro 评测中取得 59.5 分的成绩，在部分编码与 Agent 工具调用任务中表现突出，接近国际顶尖水平。',
-      highlights: ['SWE-bench Pro','59.5分','编码突出','Agent工具调用'],
-      keyInfo: ['评测基准：SWE-bench Pro（软件工程能力评测）','得分：59.5 分','优势领域：编码任务、Agent 工具调用','代码能力：略优于智谱 GLM-5.1','对比：落后于 Claude Opus 4.8','评价：在国产大模型中位列顶尖梯队'],
-      sources: [
-        { title: '百家号：跻身全球前三', url: 'https://baijiahao.baidu.com/s?id=1869587327438646169' }
-      ]
-    },
-    {
-      id: 9, name: 'ScMoE 跨层快捷连接架构', category: '技术突破', date: '2026-06-30', status: '已完成',
-      description: 'LongCat-2.0 引入 ScMoE 跨层快捷连接架构、Ngram Embedding 增强等多项原创设计，提升模型训练效率和表达能力。',
-      highlights: ['ScMoE架构','跨层连接','Ngram增强','原创设计'],
-      keyInfo: ['技术创新 1：ScMoE 跨层快捷连接架构','技术创新 2：Ngram Embedding 增强','目标：提升训练效率和模型表达能力','设计原则：多项原创设计，区别于标准 MoE 架构','效果：支撑万亿参数模型的高效训练与推理'],
-      sources: [
-        { title: '快科技：技术突破维度', url: 'https://finance.sina.cn/tech/2026-07-03/detail-inifnxph0451482.d.html' }
-      ]
-    },
-    {
-      id: 10, name: '开源核心技术计划', category: '开源计划', date: '2026-07', status: '进行中',
-      description: '美团计划近期在多平台同步开源 LongCat-2.0 的 Infra 框架、推理引擎、模型参数等核心技术，向全球开发者社区回馈技术成果。',
-      highlights: ['Infra框架','推理引擎','模型参数','多平台同步'],
-      keyInfo: ['开源范围：Infra 框架、推理引擎、模型参数','发布时间：预计 2026 年 7 月','发布平台：多平台同步','目标受众：全球开发者社区','意义：首个全国产万亿参数开源大模型','影响：推动国产大模型生态建设'],
-      sources: [
-        { title: '百家号：宣布对外开源', url: 'https://baijiahao.baidu.com/s?id=1869406385772561189' },
-        { title: '金融界：后续将对外开源', url: 'https://m.jrj.com.cn/madapter/finance/2026/07/02191657674760.shtml' }
-      ]
-    },
-    {
-      id: 11, name: '美团 AI 转型部成立', category: '组织变革', date: '2026-06', status: '已完成',
-      description: '美团近期成立 AI 转型部，将 AI 提升到公司战略层面。CEO 王兴在多个场合表达过对 AI 的判断，LongCat-2.0 的发布标志着美团从AI应用者向AI基础设施提供者转型。',
-      highlights: ['AI转型部','王兴战略','基础设施','战略升级'],
-      keyInfo: ['组织变革：成立 AI 转型部','战略定位：从 AI 应用者 → AI 基础设施提供者','领导层：CEO 王兴多次公开表达对 AI 的判断','历史积累：2023 年起聚焦国产算力适配','团队规模：从千卡规模起步，逐步扩展至万卡级','目标：本地生活行业服务效率升级'],
-      sources: [
-        { title: '每日经济新闻：美团AI走到台前', url: 'https://m.nbd.com.cn/articles/2026-06-30/4442664.html' }
-      ]
-    },
-    {
-      id: 12, name: '模芯协同研发三年攻关', category: '技术突破', date: '2023-2026', status: '已完成',
-      description: '自 2023 年起，美团与国产算力厂商共同推进模芯协同研发，从早期小规模验证到超大规模稳定训练，逐步攻克万卡级容错恢复、NPU 确定性计算、算力利用率提升等核心难题。',
-      highlights: ['模芯协同','三年攻关','万卡容错','NPU确定性'],
-      keyInfo: ['研发起点：2023 年','合作模式：与国产算力厂商联合推进模芯协同','攻关历程：千卡 → 万卡 → 超大规模稳定训练','核心技术 1：万卡级容错恢复','核心技术 2：NPU 确定性计算','核心技术 3：算力利用率提升（MFU 1.5x）','验证结论：国产算力已可支撑前沿模型全流程训练'],
-      sources: [
-        { title: '快科技：三年技术攻关', url: 'https://finance.sina.cn/tech/2026-07-03/detail-inifnxph0451482.d.html' }
-      ]
-    }
-  ];
-
-  M_SPANID='0.148.1' const openSourceDate = new Date('2026-07-15T00:00:00+08:00');
-  let currentView = 'grid';
-  let searchQuery = '';
-  let activeFilter = '全部';
-
-  M_SPANID='0.148.2' const categories = [...new Set(trackerData.map(d => d.category))];
-
-  M_SPANID='0.148.3' function updateCountdown() {
-    const now = new Date();
-    const diff = openSourceDate - now;
-    if (diff <= 0) {
-      document.getElementById('countdown').innerHTML = '<div class="countdown-item"><div class="value">已开源</div><div class="label">LongCat-2.0</div></div>';
-      return;
-    }
-    const days = Math.floor(diff / (1000 * 60 * 60 * 24));
-    const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-    const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
-    const items = [
-      { value: days, label: '天' },
-      { value: hours, label: '时' },
-      { value: minutes, label: '分' }
-    ];
-    document.getElementById('countdown').innerHTML = items.map(i =>
-      `<div class="countdown-item"><div class="value">${i.value}</div><div class="label">${i.label}</div></div>`
-    ).join('');
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LongCat-2.0 追踪器 — 美团万亿参数国产大模型</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:#0f172a;color:#e2e8f0;min-height:100vh}
+.container{max-width:1200px;margin:0 auto;padding:24px}
+header{text-align:center;margin-bottom:32px}
+header h1{font-size:2.2rem;font-weight:700;color:#f8fafc;margin-bottom:8px}
+header .subtitle{color:#94a3b8;font-size:1.1rem;margin-bottom:16px}
+.countdown{display:flex;justify-content:center;gap:16px;margin-bottom:24px;flex-wrap:wrap}
+.countdown-item{background:#1e293b;border:1px solid #334155;border-radius:12px;padding:16px 24px;text-align:center;min-width:80px}
+.countdown-item .value{font-size:2rem;font-weight:700;color:#38bdf8}
+.countdown-item .label{font-size:0.85rem;color:#64748b;margin-top:4px}
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:12px;margin-bottom:32px}
+.stat-card{background:#1e293b;border:1px solid #334155;border-radius:12px;padding:16px;text-align:center}
+.stat-card .value{font-size:1.8rem;font-weight:700;color:#38bdf8}
+.stat-card .label{font-size:0.85rem;color:#94a3b8;margin-top:4px}
+.controls{display:flex;gap:12px;margin-bottom:24px;flex-wrap:wrap;align-items:center}
+.search-input{flex:1;min-width:200px;padding:10px 16px;border-radius:8px;border:1px solid #334155;background:#1e293b;color:#e2e8f0;font-size:0.95rem}
+.search-input::placeholder{color:#64748b}
+.filter-group{display:flex;gap:8px;flex-wrap:wrap}
+.filter-btn{padding:8px 16px;border-radius:8px;border:1px solid #334155;background:#1e293b;color:#94a3b8;cursor:pointer;font-size:0.85rem;transition:all 0.2s}
+.filter-btn:hover{border-color:#38bdf8;color:#38bdf8}
+.filter-btn.active{background:#38bdf8;color:#0f172a;border-color:#38bdf8;font-weight:600}
+.view-toggle{display:flex;gap:8px;margin-left:auto}
+.view-btn{padding:8px 16px;border-radius:8px;border:1px solid #334155;background:#1e293b;color:#94a3b8;cursor:pointer;font-size:0.85rem}
+.view-btn.active{background:#38bdf8;color:#0f172a;border-color:#38bdf8}
+.content-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:16px}
+.card{background:#1e293b;border:1px solid #334155;border-radius:12px;padding:20px;cursor:pointer;transition:transform 0.2s,border-color 0.2s}
+.card:hover{transform:translateY(-2px);border-color:#38bdf8}
+.card-header{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:12px}
+.card-title{font-size:1.1rem;font-weight:600;color:#f8fafc}
+.card-badge{padding:4px 10px;border-radius:6px;font-size:0.75rem;font-weight:500}
+.badge-category-模型发布{background:#7c3aed;color:#fff}
+.badge-category-技术突破{background:#0ea5e9;color:#fff}
+.badge-category-生态进展{background:#10b981;color:#fff}
+.badge-category-性能评测{background:#f59e0b;color:#fff}
+.badge-category-开源计划{background:#ec4899;color:#fff}
+.badge-category-组织变革{background:#8b5cf6;color:#fff}
+.badge-status-已完成{background:#059669;color:#fff}
+.badge-status-进行中{background:#d97706;color:#fff}
+.card-meta{color:#64748b;font-size:0.85rem;margin-bottom:8px;display:flex;gap:12px;flex-wrap:wrap}
+.card-desc{color:#94a3b8;font-size:0.9rem;line-height:1.5;margin-bottom:12px}
+.card-tags{display:flex;gap:6px;flex-wrap:wrap}
+.card-tag{padding:4px 10px;border-radius:6px;background:#0f172a;color:#64748b;font-size:0.75rem;border:1px solid #334155}
+.timeline-view{display:none}
+.timeline-item{display:flex;gap:16px;margin-bottom:20px;position:relative;padding-left:32px}
+.timeline-item::before{content:"";position:absolute;left:8px;top:8px;width:12px;height:12px;border-radius:50%;background:#38bdf8;border:2px solid #0f172a}
+.timeline-item::after{content:"";position:absolute;left:13px;top:24px;width:2px;height:calc(100% + 8px);background:#334155}
+.timeline-item:last-child::after{display:none}
+.timeline-date{min-width:100px;color:#64748b;font-size:0.85rem;flex-shrink:0}
+.timeline-content{background:#1e293b;border:1px solid #334155;border-radius:12px;padding:16px;flex:1;cursor:pointer}
+.timeline-content:hover{border-color:#38bdf8}
+.table-view{display:none;overflow-x:auto}
+table{width:100%;border-collapse:collapse}
+th,td{padding:12px;text-align:left;border-bottom:1px solid #334155}
+th{color:#94a3b8;font-weight:500;font-size:0.85rem;text-transform:uppercase}
+td{color:#e2e8f0;font-size:0.9rem}
+tr:hover td{background:#1e293b}
+.modal-overlay{display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.8);z-index:100;justify-content:center;align-items:center;padding:24px}
+.modal-overlay.active{display:flex}
+.modal{background:#1e293b;border:1px solid #334155;border-radius:16px;max-width:600px;width:100%;max-height:85vh;overflow-y:auto;position:relative}
+.modal-header{padding:20px 24px;border-bottom:1px solid #334155;display:flex;justify-content:space-between;align-items:center}
+.modal-title{font-size:1.3rem;font-weight:600;color:#f8fafc}
+.modal-close{background:none;border:none;color:#94a3b8;font-size:1.5rem;cursor:pointer}
+.modal-body{padding:24px}
+.modal-section{margin-bottom:20px}
+.modal-section-title{color:#38bdf8;font-weight:600;font-size:0.9rem;margin-bottom:8px;text-transform:uppercase}
+.modal-section-content{color:#e2e8f0;line-height:1.6}
+.modal-tag{display:inline-block;padding:4px 10px;border-radius:6px;background:#0f172a;color:#94a3b8;font-size:0.8rem;border:1px solid #334155;margin:2px}
+.modal-link{display:inline-block;color:#38bdf8;text-decoration:none;margin:4px 0}
+.modal-link:hover{text-decoration:underline}
+.empty-state{text-align:center;padding:60px 20px;color:#64748b}
+.footer{text-align:center;margin-top:48px;padding:24px;color:#475569;font-size:0.85rem;border-top:1px solid #1e293b}
+.highlight-box{background:#0f172a;border:1px solid #334155;border-radius:8px;padding:12px;margin:8px 0}
+.highlight-box strong{color:#38bdf8}
+@media(max-width:768px){
+.countdown-item{min-width:60px;padding:12px 16px}
+.countdown-item .value{font-size:1.5rem}
+.stats{grid-template-columns:repeat(2,1fr)}
+.content-grid{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+<div class="container">
+<header>
+<h1>LongCat-2.0 追踪器</h1>
+<p class="subtitle">美团万亿参数国产大模型 · 1.6T 参数 · 5万卡国产算力 · 全链路自主可控</p>
+<div class="countdown" id="countdown"></div>
+</header>
+<div class="stats" id="stats"></div>
+<div class="controls">
+<input type="text" class="search-input" id="searchInput" placeholder="搜索技术、事件、数据...">
+<div class="filter-group" id="filterGroup"></div>
+<div class="view-toggle">
+<button class="view-btn active" data-view="grid">卡片</button>
+<button class="view-btn" data-view="timeline">时间线</button>
+<button class="view-btn" data-view="table">表格</button>
+</div>
+</div>
+<div class="content-grid" id="gridView"></div>
+<div class="timeline-view" id="timelineView"></div>
+<div class="table-view" id="tableView"></div>
+</div>
+<div class="modal-overlay" id="modalOverlay">
+<div class="modal">
+<div class="modal-header">
+<span class="modal-title" id="modalTitle"></span>
+<button class="modal-close" onclick="closeModal()">&times;</button>
+</div>
+<div class="modal-body" id="modalBody"></div>
+</div>
+</div>
+<div class="footer">
+<p>LongCat-2.0 追踪器 · 数据截至 2026-07-03 · 非官方页面</p>
+</div>
+<script>
+(function(){
+const trackerData=[
+  {
+    "id": 1,
+    "name": "LongCat-2.0 正式发布",
+    "category": "模型发布",
+    "date": "2026-06-30",
+    "status": "已完成",
+    "description": "美团正式发布新一代基础大模型 LongCat-2.0，采用 MoE 混合专家架构，总参数规模达 1.6 万亿，每个 Token 激活参数约 480 亿（动态范围 33B~56B），原生支持 1M 超长上下文。",
+    "highlights": [
+      "MoE架构",
+      "1.6T参数",
+      "1M上下文",
+      "全国产算力"
+    ],
+    "keyInfo": [
+      "发布日期：2026年6月30日",
+      "架构：MoE 混合专家架构",
+      "总参数：1.6 万亿",
+      "激活参数：480 亿（动态范围 33B~56B）",
+      "上下文窗口：1M（100万 Token）",
+      "预训练数据：超过 30T tokens"
+    ],
+    "sources": [
+      {
+        "title": "美团发布LongCat-2.0大模型",
+        "url": "https://baijiahao.baidu.com/s?id=1869406385772561189"
+      },
+      {
+        "title": "快科技：全国产算力跑通",
+        "url": "https://finance.sina.cn/tech/2026-07-03/detail-inifnxph0451482.d.html"
+      },
+      {
+        "title": "每日经济新闻：三年蛰伏",
+        "url": "https://m.nbd.com.cn/articles/2026-06-30/4442664.html"
+      }
+    ]
+  },
+  {
+    "id": 2,
+    "name": "5万卡国产算力全流程训练",
+    "category": "技术突破",
+    "date": "2026-06-30",
+    "status": "已完成",
+    "description": "业界首个依靠国产算力完成训练、推理全流程的万亿参数大模型。峰值规模超过 5 万张国产算力卡，是迄今为止国产算力上完成的规模最大的训练任务。",
+    "highlights": [
+      "5万卡集群",
+      "全流程国产",
+      "MFU提升1.5倍",
+      "故障率降低70%"
+    ],
+    "keyInfo": [
+      "峰值规模：超过 5 万张国产算力卡",
+      "训练 MFU 提升：1.5 倍",
+      "稳态日吞吐：超过 1T tokens/day",
+      "月均日故障率降低：70% 以上",
+      "技术突破：万卡级容错恢复、NPU确定性计算",
+      "研发周期：2023 年起与国产算力厂商联合攻关"
+    ],
+    "sources": [
+      {
+        "title": "IT之家：业界首个",
+        "url": "https://baijiahao.baidu.com/s?id=1869388841739284513"
+      },
+      {
+        "title": "新浪：美团AI研发团队",
+        "url": "http://k.sina.com.cn/article_7880068204_1d5b04c6c06801agze.html"
+      }
+    ]
+  },
+  {
+    "id": 3,
+    "name": "Owl Alpha 匿名接入 OpenRouter",
+    "category": "生态进展",
+    "date": "2026-04",
+    "status": "已完成",
+    "description": "LongCat-2.0 预览版本以匿名身份 Owl Alpha 接入全球最大的大模型 API 路由平台 OpenRouter，截至 6 月底总调用量已跻身全球前三。",
+    "highlights": [
+      "OpenRouter",
+      "匿名登榜",
+      "全球前三",
+      "开发者自发传播"
+    ],
+    "keyInfo": [
+      "匿名身份：Owl Alpha",
+      "接入平台：OpenRouter（全球最大 API 路由平台）",
+      "总调用量排名：全球前三",
+      "发布策略：匿名登榜 → 圈内猜谜 → 官宣认领",
+      "时间线：2026 年 4 月底发布预览版并接入"
+    ],
+    "sources": [
+      {
+        "title": "百家号：OpenRouter总调用量跻身全球前三",
+        "url": "https://baijiahao.baidu.com/s?id=1869406385772561189"
+      }
+    ]
+  },
+  {
+    "id": 4,
+    "name": "Agent 场景调用量全球领先",
+    "category": "生态进展",
+    "date": "2026-06",
+    "status": "已完成",
+    "description": "在 Hermes、Claude Code、OpenClaw 等核心 Agent 场景中，LongCat-2.0 月调用量分别位列全球第一、第二和第三位。",
+    "highlights": [
+      "Hermes第一",
+      "Claude Code第二",
+      "OpenClaw第三",
+      "Agent能力接近Opus4.6"
+    ],
+    "keyInfo": [
+      "Hermes 月调用量：全球第一",
+      "Claude Code 月调用量：全球第二",
+      "OpenClaw 月调用量：全球第三",
+      "Agent 核心能力：接近 Claude Opus 4.6",
+      "代码能力：略优于智谱 GLM-5.1",
+      "评价：最受全球开发者欢迎的免费模型之一"
+    ],
+    "sources": [
+      {
+        "title": "快科技：调用量冲进前三",
+        "url": "https://finance.sina.cn/tech/2026-07-03/detail-inifnxph0451482.d.html"
+      }
+    ]
+  },
+  {
+    "id": 5,
+    "name": "零计算专家机制",
+    "category": "技术突破",
+    "date": "2026-06-30",
+    "status": "已完成",
+    "description": "业界首创的 Token 级动态计算预算机制。识别助词、标点等简单 Token 并跳过无效运算，仅针对复杂内容调动算力资源，实现 33B~56B 动态激活范围。",
+    "highlights": [
+      "业界首创",
+      "Token级动态",
+      "简单Token跳过",
+      "算力精准分配"
+    ],
+    "keyInfo": [
+      "机制类型：零计算专家（Zero-Compute Expert）",
+      "创新点：Token 级动态计算预算，业界首创",
+      "动态范围：33B~56B 激活参数",
+      "优化效果：简单 Token 不消耗算力，复杂 Token 自动获得更多资源",
+      "架构融合：融入专家并行通信流程，避免不必要的传输与计算",
+      "对比优势：相比传统稠密大模型大幅提升算力利用率"
+    ],
+    "sources": [
+      {
+        "title": "IT之家：零计算专家机制",
+        "url": "https://baijiahao.baidu.com/s?id=1869388841739284513"
+      }
+    ]
+  },
+  {
+    "id": 6,
+    "name": "LongCat Sparse Attention (LSA)",
+    "category": "技术突破",
+    "date": "2026-06-30",
+    "status": "已完成",
+    "description": "稀疏注意力机制，处理长文本时不再逐字逐句地看，而是智能筛选关键信息，将计算量从平方级降至线性级，在 100 万 Token 超长上下文中保持信息定位与理解能力。",
+    "highlights": [
+      "稀疏注意力",
+      "平方级→线性级",
+      "1M上下文",
+      "智能筛选"
+    ],
+    "keyInfo": [
+      "技术名称：LongCat Sparse Attention (LSA)",
+      "核心机制：智能筛选关键信息，跳过冗余计算",
+      "计算复杂度：从平方级 O(n²) 降至线性级 O(n)",
+      "上下文支持：100 万 Token 超长上下文",
+      "应用场景：长文档理解、代码库分析、多轮对话",
+      "优势：解决长文本处理中常见的信息遗忘问题"
+    ],
+    "sources": [
+      {
+        "title": "IT之家：LSA稀疏注意力机制",
+        "url": "https://baijiahao.baidu.com/s?id=1869388841739284513"
+      }
+    ]
+  },
+  {
+    "id": 7,
+    "name": "MOPD 三组专家架构",
+    "category": "技术突破",
+    "date": "2026-06-30",
+    "status": "已完成",
+    "description": "通过 MOPD 架构融合 Agent、Reasoning、Interaction 三组专家能力——Agent Experts 专攻工具调用与自主纠错，Reasoning Experts 深耕数学与 STEM 推理，Interaction Experts 优化指令遵循与交互体验。",
+    "highlights": [
+      "MOPD架构",
+      "三组专家",
+      "分工协作",
+      "场景覆盖"
+    ],
+    "keyInfo": [
+      "架构名称：MOPD（Multi-Objective Parallel Decoding）",
+      "Agent Experts：专攻工具调用与自主纠错",
+      "Reasoning Experts：深耕数学与 STEM 推理",
+      "Interaction Experts：优化指令遵循与交互体验",
+      "设计理念：不同任务类型由不同专家组处理",
+      "效果：代码任务和 Agent 工具调用表现突出"
+    ],
+    "sources": [
+      {
+        "title": "IT之家：MOPD架构融合",
+        "url": "https://baijiahao.baidu.com/s?id=1869388841739284513"
+      }
+    ]
+  },
+  {
+    "id": 8,
+    "name": "SWE-bench Pro 性能评测",
+    "category": "性能评测",
+    "date": "2026-06-30",
+    "status": "已完成",
+    "description": "LongCat-2.0 在 SWE-bench Pro 评测中取得 59.5 分的成绩，在部分编码与 Agent 工具调用任务中表现突出，接近国际顶尖水平。",
+    "highlights": [
+      "SWE-bench Pro",
+      "59.5分",
+      "编码突出",
+      "Agent工具调用"
+    ],
+    "keyInfo": [
+      "评测基准：SWE-bench Pro（软件工程能力评测）",
+      "得分：59.5 分",
+      "优势领域：编码任务、Agent 工具调用",
+      "代码能力：略优于智谱 GLM-5.1",
+      "对比：落后于 Claude Opus 4.8",
+      "评价：在国产大模型中位列顶尖梯队"
+    ],
+    "sources": [
+      {
+        "title": "百家号：跻身全球前三",
+        "url": "https://baijiahao.baidu.com/s?id=1869587327438646169"
+      }
+    ]
+  },
+  {
+    "id": 9,
+    "name": "ScMoE 跨层快捷连接架构",
+    "category": "技术突破",
+    "date": "2026-06-30",
+    "status": "已完成",
+    "description": "LongCat-2.0 引入 ScMoE 跨层快捷连接架构、Ngram Embedding 增强等多项原创设计，提升模型训练效率和表达能力。",
+    "highlights": [
+      "ScMoE架构",
+      "跨层连接",
+      "Ngram增强",
+      "原创设计"
+    ],
+    "keyInfo": [
+      "技术创新 1：ScMoE 跨层快捷连接架构",
+      "技术创新 2：Ngram Embedding 增强",
+      "目标：提升训练效率和模型表达能力",
+      "设计原则：多项原创设计，区别于标准 MoE 架构",
+      "效果：支撑万亿参数模型的高效训练与推理"
+    ],
+    "sources": [
+      {
+        "title": "快科技：技术突破维度",
+        "url": "https://finance.sina.cn/tech/2026-07-03/detail-inifnxph0451482.d.html"
+      }
+    ]
+  },
+  {
+    "id": 10,
+    "name": "开源核心技术计划",
+    "category": "开源计划",
+    "date": "2026-07",
+    "status": "进行中",
+    "description": "美团计划近期在多平台同步开源 LongCat-2.0 的 Infra 框架、推理引擎、模型参数等核心技术，向全球开发者社区回馈技术成果。",
+    "highlights": [
+      "Infra框架",
+      "推理引擎",
+      "模型参数",
+      "多平台同步"
+    ],
+    "keyInfo": [
+      "开源范围：Infra 框架、推理引擎、模型参数",
+      "发布时间：预计 2026 年 7 月",
+      "发布平台：多平台同步",
+      "目标受众：全球开发者社区",
+      "意义：首个全国产万亿参数开源大模型",
+      "影响：推动国产大模型生态建设"
+    ],
+    "sources": [
+      {
+        "title": "百家号：宣布对外开源",
+        "url": "https://baijiahao.baidu.com/s?id=1869406385772561189"
+      },
+      {
+        "title": "金融界：后续将对外开源",
+        "url": "https://m.jrj.com.cn/madapter/finance/2026/07/02191657674760.shtml"
+      }
+    ]
+  },
+  {
+    "id": 11,
+    "name": "美团 AI 转型部成立",
+    "category": "组织变革",
+    "date": "2026-06",
+    "status": "已完成",
+    "description": "美团近期成立 AI 转型部，将 AI 提升到公司战略层面。CEO 王兴在多个场合表达过对 AI 的判断，LongCat-2.0 的发布标志着美团从AI应用者向AI基础设施提供者转型。",
+    "highlights": [
+      "AI转型部",
+      "王兴战略",
+      "基础设施",
+      "战略升级"
+    ],
+    "keyInfo": [
+      "组织变革：成立 AI 转型部",
+      "战略定位：从 AI 应用者 → AI 基础设施提供者",
+      "领导层：CEO 王兴多次公开表达对 AI 的判断",
+      "历史积累：2023 年起聚焦国产算力适配",
+      "团队规模：从千卡规模起步，逐步扩展至万卡级",
+      "目标：本地生活行业服务效率升级"
+    ],
+    "sources": [
+      {
+        "title": "每日经济新闻：美团AI走到台前",
+        "url": "https://m.nbd.com.cn/articles/2026-06-30/4442664.html"
+      }
+    ]
+  },
+  {
+    "id": 12,
+    "name": "模芯协同研发三年攻关",
+    "category": "技术突破",
+    "date": "2023-2026",
+    "status": "已完成",
+    "description": "自 2023 年起，美团与国产算力厂商共同推进模芯协同研发，从早期小规模验证到超大规模稳定训练，逐步攻克万卡级容错恢复、NPU 确定性计算、算力利用率提升等核心难题。",
+    "highlights": [
+      "模芯协同",
+      "三年攻关",
+      "万卡容错",
+      "NPU确定性"
+    ],
+    "keyInfo": [
+      "研发起点：2023 年",
+      "合作模式：与国产算力厂商联合推进模芯协同",
+      "攻关历程：千卡 → 万卡 → 超大规模稳定训练",
+      "核心技术 1：万卡级容错恢复",
+      "核心技术 2：NPU 确定性计算",
+      "核心技术 3：算力利用率提升（MFU 1.5x）",
+      "验证结论：国产算力已可支撑前沿模型全流程训练"
+    ],
+    "sources": [
+      {
+        "title": "快科技：三年技术攻关",
+        "url": "https://finance.sina.cn/tech/2026-07-03/detail-inifnxph0451482.d.html"
+      }
+    ]
   }
-  M_SPANID='0.148.4' setInterval(updateCountdown, 60000);
-  M_SPANID='0.148.5' updateCountdown();
+];
+const openSourceDate=new Date("2026-07-15T00:00:00+08:00");
+let currentView="grid";
+let searchQuery="";
+let activeFilter="全部";
+const categories=["技术突破", "模型发布", "组织变革", "开源计划", "生态进展", "性能评测"];
 
-  M_SPANID='0.148.6' function renderStats() {
-    const completed = trackerData.filter(d => d.status === '已完成').length;
-    const inProgress = trackerData.filter(d => d.status === '进行中').length;
-    const techBreakthrough = trackerData.filter(d => d.category === '技术突破').length;
-    const ecoProgress = trackerData.filter(d => d.category === '生态进展').length;
-    const openSource = trackerData.filter(d => d.category === '开源计划').length;
-    const stats = [
-      { label: '追踪项目', value: trackerData.length },
-      { label: '技术突破', value: techBreakthrough },
-      { label: '生态进展', value: ecoProgress },
-      { label: '已完成', value: completed },
-      { label: '进行中', value: inProgress },
-      { label: '开源计划', value: openSource }
-    ];
-    document.getElementById('stats').innerHTML = stats.map(s =>
-      `<div class="stat-card"><div class="value">${s.value}</div><div class="label">${s.label}</div></div>`
-    ).join('');
-  }
+function updateCountdown(){
+const now=new Date();
+const diff=openSourceDate-now;
+if(diff<=0){
+document.getElementById("countdown").innerHTML='<div class="countdown-item"><div class="value">已开源</div><div class="label">LongCat-2.0</div></div>';
+return;
+}
+const days=Math.floor(diff/(1000*60*60*24));
+const hours=Math.floor((diff%(1000*60*60*24))/(1000*60*60));
+const minutes=Math.floor((diff%(1000*60*60))/(1000*60));
+const items=[{value:days,label:"天"},{value:hours,label:"时"},{value:minutes,label:"分"}];
+document.getElementById("countdown").innerHTML=items.map(i=>`<div class="countdown-item"><div class="value">${i.value}</div><div class="label">${i.label}</div></div>`).join("");
+}
+setInterval(updateCountdown,60000);
+updateCountdown();
 
-  M_SPANID='0.148.7' function renderFilters() {
-    const filterGroup = document.getElementById('filterGroup');
-    const allCategories = ['全部', ...categories];
-    filterGroup.innerHTML = allCategories.map(c =>
-      `<button class="filter-btn ${c === activeFilter ? 'active' : ''}" data-filter="${c}">${c}</button>`
-    ).join('');
-    filterGroup.querySelectorAll('.filter-btn').forEach(btn => {
-      btn.addEventListener('click', () => {
-        activeFilter = btn.dataset.filter;
-        searchQuery = '';
-        document.getElementById('searchInput').value = '';
-        renderFilters();
-        renderAll();
-      });
-    });
-  }
+function renderStats(){
+const completed=trackerData.filter(d=>d.status==="已完成").length;
+const inProgress=trackerData.filter(d=>d.status==="进行中").length;
+const techBreakthrough=trackerData.filter(d=>d.category==="技术突破").length;
+const ecoProgress=trackerData.filter(d=>d.category==="生态进展").length;
+const openSource=trackerData.filter(d=>d.category==="开源计划").length;
+const stats=[
+{label:"追踪项目",value:trackerData.length},
+{label:"技术突破",value:techBreakthrough},
+{label:"生态进展",value:ecoProgress},
+{label:"已完成",value:completed},
+{label:"进行中",value:inProgress},
+{label:"开源计划",value:openSource}
+];
+document.getElementById("stats").innerHTML=stats.map(s=>`<div class="stat-card"><div class="value">${s.value}</div><div class="label">${s.label}</div></div>`).join("");
+}
 
-  M_SPANID='0.148.8' function getFilteredData() {
-    let data = trackerData;
-    if (activeFilter !== '全部') {
-      data = data.filter(d => d.category === activeFilter);
-    }
-    if (searchQuery) {
-      const q = searchQuery.toLowerCase();
-      data = data.filter(d =>
-        d.name.toLowerCase().includes(q) ||
-        d.description.toLowerCase().includes(q) ||
-        d.status.toLowerCase().includes(q) ||
-        d.highlights.some(h => h.toLowerCase().includes(q)) ||
-        d.keyInfo.some(k => k.toLowerCase().includes(q))
-      );
-    }
-    return data;
-  }
+function renderFilters(){
+const filterGroup=document.getElementById("filterGroup");
+const allCategories=["全部",...categories];
+filterGroup.innerHTML=allCategories.map(c=>`<button class="filter-btn ${c===activeFilter?"active":""}" data-filter="${c}">${c}</button>`).join("");
+filterGroup.querySelectorAll(".filter-btn").forEach(btn=>{
+btn.addEventListener("click",()=>{
+activeFilter=btn.dataset.filter;
+searchQuery="";
+document.getElementById("searchInput").value="";
+renderFilters();
+renderAll();
+});
+});
+}
 
-  M_SPANID='0.148.9' function renderGrid() {
-    const data = getFilteredData();
-    const grid = document.getElementById('gridView');
-    if (!data.length) {
-      grid.innerHTML = '<div class="empty-state">没有找到匹配的项目</div>';
-      return;
-    }
-    grid.innerHTML = data.map(item => `
-      <div class="card" onclick="openModal(${item.id})">
-        <div class="card-header">
-          <div class="card-title">${item.name}</div>
-          <span class="card-badge badge-category-${item.category}">${item.category}</span>
-        </div>
-        <div class="card-meta">
-          <span>${item.date}</span>
-          <span class="card-badge badge-status-${item.status}">${item.status}</span>
-        </div>
-        <div class="card-desc">${item.description}</div>
-        <div class="card-tags">
-          ${item.highlights.map(h => `<span class="card-tag">${h}</span>`).join('')}
-        </div>
-      </div>
-    `).join('');
-  }
+function getFilteredData(){
+let data=trackerData;
+if(activeFilter!=="全部")data=data.filter(d=>d.category===activeFilter);
+if(searchQuery){
+const q=searchQuery.toLowerCase();
+data=data.filter(d=>d.name.toLowerCase().includes(q)||d.description.toLowerCase().includes(q)||d.status.toLowerCase().includes(q)||d.highlights.some(h=>h.toLowerCase().includes(q))||d.keyInfo.some(k=>k.toLowerCase().includes(q)));
+}
+return data;
+}
 
-  M_SPANID='0.148.10' function renderTimeline() {
-    const data = getFilteredData();
-    const timeline = document.getElementById('timelineView');
-    if (!data.length) {
-      timeline.innerHTML = '<div class="empty-state">没有找到匹配的项目</div>';
-      return;
-    }
-    timeline.innerHTML = data.map(item => `
-      <div class="timeline-item">
-        <div class="timeline-date">${item.date}</div>
-        <div class="timeline-content" onclick="openModal(${item.id})">
-          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
-            <strong style="color:#f8fafc;">${item.name}</strong>
-            <span class="card-badge badge-category-${item.category}">${item.category}</span>
-          </div>
-          <div style="color:#64748b; font-size:0.85rem; margin-bottom:8px;">${item.date} · ${item.status}</div>
-          <div style="color:#94a3b8; font-size:0.9rem;">${item.description}</div>
-        </div>
-      </div>
-    `).join('');
-  }
+function renderGrid(){
+const data=getFilteredData();
+const grid=document.getElementById("gridView");
+if(!data.length){grid.innerHTML='<div class="empty-state">没有找到匹配的项目</div>';return;}
+grid.innerHTML=data.map(item=>`<div class="card" onclick="openModal(${item.id})"><div class="card-header"><div class="card-title">${item.name}</div><span class="card-badge badge-category-${item.category}">${item.category}</span></div><div class="card-meta"><span>${item.date}</span><span class="card-badge badge-status-${item.status}">${item.status}</span></div><div class="card-desc">${item.description}</div><div class="card-tags">${item.highlights.map(h=>`<span class="card-tag">${h}</span>`).join("")}</div></div>`).join("");
+}
 
-  M_SPANID='0.148.11' function renderTable() {
-    const data = getFilteredData();
-    const table = document.getElementById('tableView');
-    if (!data.length) {
-      table.innerHTML = '<div class="empty-state">没有找到匹配的项目</div>';
-      return;
-    }
-    table.innerHTML = `
-      <table>
-        <thead><tr>
-          <th>名称</th><th>分类</th><th>日期</th><th>状态</th><th>亮点</th>
-        </tr></thead>
-        <tbody>
-          ${data.map(item => `
-            <tr onclick="openModal(${item.id})" style="cursor:pointer;">
-              <td><strong>${item.name}</strong></td>
-              <td><span class="card-badge badge-category-${item.category}">${item.category}</span></td>
-              <td>${item.date}</td>
-              <td><span class="card-badge badge-status-${item.status}">${item.status}</span></td>
-              <td>${item.highlights.slice(0, 2).join(', ')}</td>
-            </tr>
-          `).join('')}
-        </tbody>
-      </table>
-    `;
-  }
+function renderTimeline(){
+const data=getFilteredData();
+const timeline=document.getElementById("timelineView");
+if(!data.length){timeline.innerHTML='<div class="empty-state">没有找到匹配的项目</div>';return;}
+timeline.innerHTML=data.map(item=>`<div class="timeline-item"><div class="timeline-date">${item.date}</div><div class="timeline-content" onclick="openModal(${item.id})"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;"><strong style="color:#f8fafc;">${item.name}</strong><span class="card-badge badge-category-${item.category}">${item.category}</span></div><div style="color:#64748b;font-size:0.85rem;margin-bottom:8px;">${item.date} · ${item.status}</div><div style="color:#94a3b8;font-size:0.9rem;">${item.description}</div></div></div>`).join("");
+}
 
-  M_SPANID='0.148.12' function renderAll() {
-    renderGrid();
-    renderTimeline();
-    renderTable();
-  }
+function renderTable(){
+const data=getFilteredData();
+const table=document.getElementById("tableView");
+if(!data.length){table.innerHTML='<div class="empty-state">没有找到匹配的项目</div>';return;}
+table.innerHTML='<table><thead><tr><th>名称</th><th>分类</th><th>日期</th><th>状态</th><th>亮点</th></tr></thead><tbody>'+data.map(item=>`<tr onclick="openModal(${item.id})" style="cursor:pointer;"><td><strong>${item.name}</strong></td><td><span class="card-badge badge-category-${item.category}">${item.category}</span></td><td>${item.date}</td><td><span class="card-badge badge-status-${item.status}">${item.status}</span></td><td>${item.highlights.slice(0,2).join(", ")}</td></tr>`).join("")+'</tbody></table>';
+}
 
-  M_SPANID='0.148.13' function switchView(view) {
-    currentView = view;
-    document.getElementById('gridView').style.display = view === 'grid' ? 'grid' : 'none';
-    document.getElementById('timelineView').style.display = view === 'timeline' ? 'block' : 'none';
-    document.getElementById('tableView').style.display = view === 'table' ? 'block' : 'none';
-    document.querySelectorAll('.view-btn').forEach(btn => {
-      btn.classList.toggle('active', btn.dataset.view === view);
-    });
-  }
+function renderAll(){renderGrid();renderTimeline();renderTable();}
 
-  M_SPANID='0.148.14' document.querySelectorAll('.view-btn').forEach(btn => {
-    btn.addEventListener('click', () => switchView(btn.dataset.view));
-  });
+function switchView(view){
+currentView=view;
+document.getElementById("gridView").style.display=view==="grid"?"grid":"none";
+document.getElementById("timelineView").style.display=view==="timeline"?"block":"none";
+document.getElementById("tableView").style.display=view==="table"?"block":"none";
+document.querySelectorAll(".view-btn").forEach(btn=>btn.classList.toggle("active",btn.dataset.view===view));
+}
 
-  M_SPANID='0.148.15' document.getElementById('searchInput').addEventListener('input', (e) => {
-    searchQuery = e.target.value.trim();
-    renderAll();
-  });
+document.querySelectorAll(".view-btn").forEach(btn=>btn.addEventListener("click",()=>switchView(btn.dataset.view)));
+document.getElementById("searchInput").addEventListener("input",(e)=>{searchQuery=e.target.value.trim();renderAll();});
 
-  M_SPANID='0.148.16' window.openModal = function(id) {
-    const item = trackerData.find(d => d.id === id);
-    if (!item) return;
-    document.getElementById('modalTitle').textContent = item.name;
-    let sourcesHtml = '';
-    if (item.sources && item.sources.length) {
-      sourcesHtml = `
-        <div class="modal-section">
-          <div class="modal-section-title">信息来源</div>
-          <div class="modal-section-content">
-            ${item.sources.map(s => `<a href="${s.url}" target="_blank" class="modal-link">${s.title}</a>`).join('<br>')}
-          </div>
-        </div>
-      `;
-    }
-    document.getElementById('modalBody').innerHTML = `
-      <div class="modal-section">
-        <div class="modal-section-title">项目概述</div>
-        <div class="modal-section-content">${item.description}</div>
-      </div>
-      <div class="modal-section">
-        <div class="modal-section-title">关键信息</div>
-        <div class="modal-section-content">
-          ${item.keyInfo.map(k => `<div class="highlight-box"><strong>${k.split('：')[0]}：</strong>${k.split('：').slice(1).join('：')}</div>`).join('')}
-        </div>
-      </div>
-      <div class="modal-section">
-        <div class="modal-section-title">核心亮点</div>
-        <div class="modal-section-content">${item.highlights.map(h => `<span class="modal-tag">${h}</span>`).join('')}</div>
-      </div>
-      ${sourcesHtml}
-    `;
-    document.getElementById('modalOverlay').classList.add('active');
-  };
+window.openModal=function(id){
+const item=trackerData.find(d=>d.id===id);
+if(!item)return;
+document.getElementById("modalTitle").textContent=item.name;
+let sourcesHtml="";
+if(item.sources&&item.sources.length){
+sourcesHtml='<div class="modal-section"><div class="modal-section-title">信息来源</div><div class="modal-section-content">'+item.sources.map(s=>`<a href="${s.url}" target="_blank" class="modal-link">${s.title}</a>`).join("<br>")+'</div></div>';
+}
+document.getElementById("modalBody").innerHTML='<div class="modal-section"><div class="modal-section-title">项目概述</div><div class="modal-section-content">'+item.description+'</div></div><div class="modal-section"><div class="modal-section-title">关键信息</div><div class="modal-section-content">'+item.keyInfo.map(k=>`<div class="highlight-box"><strong>${k.split("：")[0]}：</strong>${k.split("：").slice(1).join("：")}</div>`).join("")+'</div></div><div class="modal-section"><div class="modal-section-title">核心亮点</div><div class="modal-section-content">'+item.highlights.map(h=>`<span class="modal-tag">${h}</span>`).join("")+'</div></div>'+sourcesHtml;
+document.getElementById("modalOverlay").classList.add("active");
+};
 
-  M_SPANID='0.148.17' window.closeModal = function() {
-    document.getElementById('modalOverlay').classList.remove('active');
-  };
+window.closeModal=function(){document.getElementById("modalOverlay").classList.remove("active");};
+document.getElementById("modalOverlay").addEventListener("click",(e)=>{if(e.target===document.getElementById("modalOverlay"))closeModal();});
+document.addEventListener("keydown",(e)=>{if(e.key==="Escape")closeModal();});
 
-  M_SPANID='0.148.18' document.getElementById('modalOverlay').addEventListener('click', (e) => {
-    if (e.target === document.getElementById('modalOverlay')) closeModal();
-  });
-
-  M_SPANID='0.148.19' document.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape') closeModal();
-  });
-
-  M_SPANID='0.148.20' renderStats();
-  M_SPANID='0.148.21' renderFilters();
-  M_SPANID='0.148.22' renderAll();
-M_SPANID='0.148.23' })();
-M_SPANID='0.148.24' </script>
-M_SPANID='0.148.25' </body>
-M_SPANID='0.148.26' </html>
-M_SPANID='0.148.27' JSEOF
-
-
-  const openSourceDate = new Date("2026-07-15T00:00:00+08:00");
-  let currentView = "grid";
-  let searchQuery = "";
-  let activeFilter = "全部";
-
-  const categories = [...new Set(trackerData.map(d => d.category))];
-
-  function updateCountdown() {
-    const now = new Date();
-    const diff = openSourceDate - now;
-    if (diff <= 0) {
-      document.getElementById("countdown").innerHTML = "<div class=\"countdown-item\"><div class=\"value\">已开源</div><div class=\"label\">LongCat-2.0</div></div>";
-      return;
-    }
-    const days = Math.floor(diff / (1000 * 60 * 60 * 24));
-    const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-    const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
-    const items = [
-      { value: days, label: "天" },
-      { value: hours, label: "时" },
-      { value: minutes, label: "分" }
-    ];
-    document.getElementById("countdown").innerHTML = items.map(i =>
-      `<div class="countdown-item"><div class="value">${i.value}</div><div class="label">${i.label}</div></div>`
-    ).join("");
-  }
-  setInterval(updateCountdown, 60000);
-  updateCountdown();
-
-  function renderStats() {
-    const completed = trackerData.filter(d => d.status === "已完成").length;
-    const inProgress = trackerData.filter(d => d.status === "进行中").length;
-    const techBreakthrough = trackerData.filter(d => d.category === "技术突破").length;
-    const ecoProgress = trackerData.filter(d => d.category === "生态进展").length;
-    const openSource = trackerData.filter(d => d.category === "开源计划").length;
-    const stats = [
-      { label: "追踪项目", value: trackerData.length },
-      { label: "技术突破", value: techBreakthrough },
-      { label: "生态进展", value: ecoProgress },
-      { label: "已完成", value: completed },
-      { label: "进行中", value: inProgress },
-      { label: "开源计划", value: openSource }
-    ];
-    document.getElementById("stats").innerHTML = stats.map(s =>
-      `<div class="stat-card"><div class="value">${s.value}</div><div class="label">${s.label}</div></div>`
-    ).join("");
-  }
-
-  function renderFilters() {
-    const filterGroup = document.getElementById("filterGroup");
-    const allCategories = ["全部", ...categories];
-    filterGroup.innerHTML = allCategories.map(c =>
-      `<button class="filter-btn ${c === activeFilter ? "active" : ""}" data-filter="${c}">${c}</button>`
-    ).join("");
-    filterGroup.querySelectorAll(".filter-btn").forEach(btn => {
-      btn.addEventListener("click", () => {
-        activeFilter = btn.dataset.filter;
-        searchQuery = "";
-        document.getElementById("searchInput").value = "";
-        renderFilters();
-        renderAll();
-      });
-    });
-  }
-
-  function getFilteredData() {
-    let data = trackerData;
-    if (activeFilter !== "全部") {
-      data = data.filter(d => d.category === activeFilter);
-    }
-    if (searchQuery) {
-      const q = searchQuery.toLowerCase();
-      data = data.filter(d =>
-        d.name.toLowerCase().includes(q) ||
-        d.description.toLowerCase().includes(q) ||
-        d.status.toLowerCase().includes(q) ||
-        d.highlights.some(h => h.toLowerCase().includes(q)) ||
-        d.keyInfo.some(k => k.toLowerCase().includes(q))
-      );
-    }
-    return data;
-  }
-
-  function renderGrid() {
-    const data = getFilteredData();
-    const grid = document.getElementById("gridView");
-    if (!data.length) {
-      grid.innerHTML = "<div class=\"empty-state\">没有找到匹配的项目</div>";
-      return;
-    }
-    grid.innerHTML = data.map(item => `
-      <div class="card" onclick="openModal(${item.id})">
-        <div class="card-header">
-          <div class="card-title">${item.name}</div>
-          <span class="card-badge badge-category-${item.category}">${item.category}</span>
-        </div>
-        <div class="card-meta">
-          <span>${item.date}</span>
-          <span class="card-badge badge-status-${item.status}">${item.status}</span>
-        </div>
-        <div class="card-desc">${item.description}</div>
-        <div class="card-tags">
-          ${item.highlights.map(h => `<span class="card-tag">${h}</span>`).join("")}
-        </div>
-      </div>
-    `).join("");
-  }
-
-  function renderTimeline() {
-    const data = getFilteredData();
-    const timeline = document.getElementById("timelineView");
-    if (!data.length) {
-      timeline.innerHTML = "<div class=\"empty-state\">没有找到匹配的项目</div>";
-      return;
-    }
-    timeline.innerHTML = data.map(item => `
-      <div class="timeline-item">
-        <div class="timeline-date">${item.date}</div>
-        <div class="timeline-content" onclick="openModal(${item.id})">
-          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
-            <strong style="color:#f8fafc;">${item.name}</strong>
-            <span class="card-badge badge-category-${item.category}">${item.category}</span>
-          </div>
-          <div style="color:#64748b; font-size:0.85rem; margin-bottom:8px;">${item.date} · ${item.status}</div>
-          <div style="color:#94a3b8; font-size:0.9rem;">${item.description}</div>
-        </div>
-      </div>
-    `).join("");
-  }
-
-  function renderTable() {
-    const data = getFilteredData();
-    const table = document.getElementById("tableView");
-    if (!data.length) {
-      table.innerHTML = "<div class=\"empty-state\">没有找到匹配的项目</div>";
-      return;
-    }
-    table.innerHTML = `
-      <table>
-        <thead><tr>
-          <th>名称</th><th>分类</th><th>日期</th><th>状态</th><th>亮点</th>
-        </tr></thead>
-        <tbody>
-          ${data.map(item => `
-            <tr onclick="openModal(${item.id})" style="cursor:pointer;">
-              <td><strong>${item.name}</strong></td>
-              <td><span class="card-badge badge-category-${item.category}">${item.category}</span></td>
-              <td>${item.date}</td>
-              <td><span class="card-badge badge-status-${item.status}">${item.status}</span></td>
-              <td>${item.highlights.slice(0, 2).join(", ")}</td>
-            </tr>
-          `).join("")}
-        </tbody>
-      </table>
-    `;
-  }
-
-  function renderAll() {
-    renderGrid();
-    renderTimeline();
-    renderTable();
-  }
-
-  function switchView(view) {
-    currentView = view;
-    document.getElementById("gridView").style.display = view === "grid" ? "grid" : "none";
-    document.getElementById("timelineView").style.display = view === "timeline" ? "block" : "none";
-    document.getElementById("tableView").style.display = view === "table" ? "block" : "none";
-    document.querySelectorAll(".view-btn").forEach(btn => {
-      btn.classList.toggle("active", btn.dataset.view === view);
-    });
-  }
-
-  document.querySelectorAll(".view-btn").forEach(btn => {
-    btn.addEventListener("click", () => switchView(btn.dataset.view));
-  });
-
-  document.getElementById("searchInput").addEventListener("input", (e) => {
-    searchQuery = e.target.value.trim();
-    renderAll();
-  });
-
-  window.openModal = function(id) {
-    const item = trackerData.find(d => d.id === id);
-    if (!item) return;
-    document.getElementById("modalTitle").textContent = item.name;
-    let sourcesHtml = "";
-    if (item.sources && item.sources.length) {
-      sourcesHtml = `
-        <div class="modal-section">
-          <div class="modal-section-title">信息来源</div>
-          <div class="modal-section-content">
-            ${item.sources.map(s => `<a href="${s.url}" target="_blank" class="modal-link">${s.title}</a>`).join("<br>")}
-          </div>
-        </div>
-      `;
-    }
-    document.getElementById("modalBody").innerHTML = `
-      <div class="modal-section">
-        <div class="modal-section-title">项目概述</div>
-        <div class="modal-section-content">${item.description}</div>
-      </div>
-      <div class="modal-section">
-        <div class="modal-section-title">关键信息</div>
-        <div class="modal-section-content">
-          ${item.keyInfo.map(k => `<div class="highlight-box"><strong>${k.split("：")[0]}：</strong>${k.split("：").slice(1).join("：")}</div>`).join("")}
-        </div>
-      </div>
-      <div class="modal-section">
-        <div class="modal-section-title">核心亮点</div>
-        <div class="modal-section-content">${item.highlights.map(h => `<span class="modal-tag">${h}</span>`).join("")}</div>
-      </div>
-      ${sourcesHtml}
-    `;
-    document.getElementById("modalOverlay").classList.add("active");
-  };
-
-  window.closeModal = function() {
-    document.getElementById("modalOverlay").classList.remove("active");
-  };
-
-  document.getElementById("modalOverlay").addEventListener("click", (e) => {
-    if (e.target === document.getElementById("modalOverlay")) closeModal();
-  });
-
-  document.addEventListener("keydown", (e) => {
-    if (e.key === "Escape") closeModal();
-  });
-
-  renderStats();
-  renderFilters();
-  renderAll();
+renderStats();
+renderFilters();
+renderAll();
 })();
 </script>
 </body>
